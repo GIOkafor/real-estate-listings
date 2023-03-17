@@ -14,8 +14,18 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Build the Docker image
-      run: docker build . --file docker-compose.yml --tag realestate-angular:$(date +%s)
+    # Build the Docker image
+    - name: Build Docker image
+      run: docker build -t realestate-angular .
+
+    # Run the Docker container
+    - name: Start Docker container
+      run: docker run -d --name realestate-container -p 8082:5000 --env MONGODB_URI=mongodb://user:secretPassword@database/realestate realestate-angular
+
+    # Wait for the container to start
+    - name: Wait for container
+      run: docker ps | grep realestate-container | awk '{ print $NF }' | xargs docker logs -f --tail 0
+      timeout-minutes: 1
     - name: Cypress.io
       uses: cypress-io/github-action@v5.3.1
       with:
