@@ -8,7 +8,7 @@ on:
 
 jobs:
 
-  run cypress on docker:
+  run_cypress_on_docker:
 
     runs-on: ubuntu-latest
 
