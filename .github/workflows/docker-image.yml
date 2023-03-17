@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file docker-compose.yml --tag realestate-angular:$(date +%s)
+      run: docker build . --file docker-compose.yml --tag realestate-angular
     - name: Cypress.io
       uses: cypress-io/github-action@v5.3.1
       with:
