@@ -12,6 +12,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    #install project dependencies
+    - name: Install dependencies
+      run: npm i
+
     # Build the Docker image
     - name: Build Docker image
       run: docker build -t realestate-angular .
