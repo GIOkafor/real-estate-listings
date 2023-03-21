@@ -2,9 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "ci" ]
 
 jobs:
 
@@ -14,8 +12,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: Check node v
+      run: node --version
     - name: Build the Docker image
-      run: docker build . --file docker-compose.yml --tag realestate-angular:$(date +%s)
+      run: docker compose up -d && npx wait-on http://localhost:8000/
+    - name: Check if Docker is up
+      run: docker ps
     - name: Cypress.io
       uses: cypress-io/github-action@v5.3.1
       with:
