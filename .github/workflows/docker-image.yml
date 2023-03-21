@@ -6,29 +6,16 @@ on:
 
 jobs:
 
-  run_cypress_on_docker:
+  build:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
-
-    #install project dependencies
-    - name: Install dependencies
-      run: npm i
-
-    # Build the Docker image
-    - name: Build Docker image
-      run: docker build -t realestate-angular .
-
-    # Run the Docker container
-    - name: Start Docker container
-      run: docker run -d --name realestate-container -p 8082:5000 --env MONGODB_URI=mongodb://user:secretPassword@database/realestate realestate-angular
-
-    # Wait for the container to start
-    - name: Wait for container
-      run: docker ps | grep realestate-container | awk '{ print $NF }' | xargs docker logs -f --tail 0
-      timeout-minutes: 1
+    - name: Build the Docker image
+      run: docker compose up -d && npx wait-on http://localhost:8000/
+    - name: Check if Docker is up
+      run: docker ps
     - name: Cypress.io
       uses: cypress-io/github-action@v5.3.1
       with:
